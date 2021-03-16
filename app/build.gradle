@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+apply from:'../versions.gradle'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.example.weekthree"
+        minSdkVersion 26
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation(
+            deps.stdlib,
+            deps.android.appCompat,
+            deps.android.coreKtx,
+            deps.android.constraintLayout,
+            deps.android.material,
+
+            // DI
+            deps.dagger.runtime,
+            deps.dagger.android,
+            deps.dagger.androidSupport,
+
+            // Lifecycle
+            deps.lifecycle.viewmodel_ktx,
+
+            // Navigation
+            deps.navigation.fragment_ktx,
+            deps.navigation.runtime_ktx,
+            deps.navigation.ui,
+            deps.navigation.ui_ktx,
+            deps.fragment.runtime_ktx,
+
+            // Utils
+            deps.gson,
+            deps.gsonConverter,
+            deps.loggingInterceptor,
+            deps.coroutines,
+            deps.retrofit
+    )
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    kapt(
+            deps.dagger.compiler,
+            deps.dagger.androidSupportCompiler
+    )
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
