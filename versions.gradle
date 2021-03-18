@@ -9,7 +9,13 @@ ext.versions = [
         'fragmentVersion'   : '1.2.5',
         'loggingInterceptor': "3.9.0",
         'retrofit'          : '2.9.0',
+        'room_version'      : '2.2.6'
 ]
+
+def room = [:]
+room.runtime    = "androidx.room:room-runtime:$versions.room_version"
+room.compiler   = "androidx.room:room-compiler:$versions.room_version"
+room.coroutine  = "androidx.room:room-ktx:$versions.room_version"
 
 def dagger = [:]
 dagger.runtime = "com.google.dagger:dagger:$versions.dagger"
@@ -19,6 +25,7 @@ dagger.compiler = "com.google.dagger:dagger-compiler:$versions.dagger"
 dagger.androidSupportCompiler = "com.google.dagger:dagger-android-processor:$versions.dagger"
 
 def deps = [
+        'room'   : room,
         'dagger' : dagger,
         'stdlib' : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
         'android': [

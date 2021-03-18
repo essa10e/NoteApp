@@ -4,7 +4,8 @@ plugins {
     id 'kotlin-kapt'
 }
 
-apply from:'../versions.gradle'
+apply from: '../versions.gradle'
+apply from: '../keys.gradle'
 
 android {
     compileSdkVersion 30
@@ -16,7 +17,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        buildConfigField "String", "API_URL", "\"${API_URL}\""
+        buildConfigField "String", "API_KEY", "\"${API_KEY}\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,6 +46,9 @@ dependencies {
             deps.android.constraintLayout,
             deps.android.material,
 
+            // Database
+            deps.room.runtime,
+            deps.room.coroutine,
             // DI
             deps.dagger.runtime,
             deps.dagger.android,
@@ -70,9 +75,18 @@ dependencies {
 
     kapt(
             deps.dagger.compiler,
-            deps.dagger.androidSupportCompiler
+            deps.dagger.androidSupportCompiler,
+            deps.room.compiler
     )
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+
+
+    //implementation "androidx.room:room-runtime:$room_version"
+    //kapt "androidx.room:room-compiler:$room_version"
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    //implementation "androidx.room:room-ktx:$room_version"
 }
