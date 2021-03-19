@@ -2,24 +2,29 @@ package com.example.weekthree.ui.home
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weekthree.R
 import com.example.weekthree.data.NetworkResponse
 import com.example.weekthree.data.Note
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 
 class HomeFragment : DaggerFragment() {
+
+    private val notesAdapter: NoteAdapter by lazy {
+        NoteAdapter()
+    }
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel: HomeViewModel by lazy {
@@ -29,10 +34,7 @@ class HomeFragment : DaggerFragment() {
 
 
     // RecyclerView Reference:
-    private lateinit var todoRecyclerView: RecyclerView
-    // ViewModel Instance:
-    //private lateinit var todoViewModel: HomeViewModel
-
+    private lateinit var notesRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,33 +43,33 @@ class HomeFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeViewModel()
-        viewModel.fetchNotes()
+
+        view.findViewById<FloatingActionButton>(R.id.addNoteFloatingActionButton).setOnClickListener {
+            findNavController().navigate(R.id.actionNoteFragmentToAddNewNoteFragment)
+        }
+        notesRecyclerView = view.findViewById<RecyclerView>(R.id.notesRecyclerViewLayout).apply {
+            layoutManager = LinearLayoutManager(requireNotNull(context))
+            adapter = notesAdapter
+        }
+
+       // observeViewModel()
+        // viewModel.fetchNotes()
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        todoRecyclerView = view.findViewById(R.id.todoRecyclerViewLayout)
-        //todoViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         observeViewModel()
         viewModel.fetchNotes()
-
-//        viewModel.notes.observe(this, Observer {
-//
-//            // create an instance of the adapter
-//            val adapter = TodoAdapter(requireContext(), it)
-//
-//            todoRecyclerView.adapter = adapter
-//        })
-
-         //create an instance of the adapter
-            val adapter = TodoAdapter(requireContext(), )
-            todoRecyclerView.adapter = adapter
-        return view
     }
+
 
     private fun observeViewModel(){
         viewModel.notes.observe(viewLifecycleOwner, Observer { networkResponse ->
@@ -77,6 +79,7 @@ class HomeFragment : DaggerFragment() {
                     for (note in networkResponse.data) {
                         Log.d("Note", "${note.title}: ${note.description}")
                     }
+                    notesAdapter.addItems(networkResponse.data)
                 }
                 is NetworkResponse.Error -> Toast.makeText(context, networkResponse.error.message, Toast.LENGTH_SHORT).show()
                 is NetworkResponse.Loading -> {}

@@ -1,6 +1,5 @@
 package com.example.weekthree.ui.home
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weekthree.R
 import com.example.weekthree.data.Note
 
-class TodoAdapter(val context: Context,
-                  private val todoList: List<Note>):
-    RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+class NoteAdapter():
+    RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
+
+    private val items = mutableListOf<Note>()
+
+    fun addItems(items: List<Note>){
+        this.items.addAll(items)
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -22,15 +27,16 @@ class TodoAdapter(val context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.todo_item, parent, false)
+        val view = inflater.inflate(R.layout.note_item, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val todoItem = todoList[position]
-        holder.titleTextView.setText(todoItem.title)
-        holder.descriptionTextView.setText(todoItem.description)
+        val noteItem = items[position]
+
+        holder.titleTextView.setText(noteItem.title)
+        holder.descriptionTextView.setText(noteItem.description)
     }
 
-    override fun getItemCount() = todoList.size
+    override fun getItemCount() = items.size
 }

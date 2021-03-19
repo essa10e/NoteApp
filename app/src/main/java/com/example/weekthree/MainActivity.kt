@@ -21,9 +21,9 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        GlobalScope.launch {
-            //noteRepo.addNote()
-        }
+//        GlobalScope.launch {
+//            //noteRepo.addNote()
+//        }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -31,12 +31,13 @@ class MainActivity : DaggerAppCompatActivity() {
                 .commit()
         }
 
-//        GlobalScope.launch {
-//            val addNewNote = Note(title ="Tuesday", description = "Whatever")
-//            noteRepo.addNote(addNewNote)
-//            val notes: List<Note> = noteRepo.getNotes()
-//            Log.d("MainActivity", "notes size:" + notes.size)
-//        }
+        GlobalScope.launch {
+            val addNewNote = Note(title ="Tuesday", description = "Whatever")
+
+            noteRepo.addNote(addNewNote)
+            val notes: List<Note> = noteRepo.getNotes()
+            Log.d("MainActivity", "notes size:" + notes.size)
+        }
 
 //        BuildConfig.API_KEY
 //
